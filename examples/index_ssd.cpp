@@ -51,7 +51,7 @@ int main() {
     
     // 注意：如果你的机器核心数较多，可以适当调大 -T
     // -B 和 -M 设置为 0.1G 以适应小内存测试环境
-    std::string cmd = "../build/apps/build_disk_index "
+    std::string cmd = "/home/cc/DiskANN/build/apps/build_disk_index "
                       "--data_type float --dist_fn l2 "
                       "--data_path " + DATA_FILE + " "
                       "--index_path_prefix " + INDEX_PREFIX + " "
