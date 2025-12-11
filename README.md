@@ -1,5 +1,12 @@
 # HPDIC MOD
 
+Standard DiskANN relies on **static search parameters** (e.g., fixed `beam_width` and `L_search`) for all queries. However, real-world high-dimensional data is non-uniformly distributed, leading to significant variance in "Query Hardness."
+
+* **The Problem:** Treating all queries equally creates a "Long-Tail Latency" issue.
+    * **Easy Queries (Hubs):** Consume excessive I/O bandwidth due to over-provisioning, wasting throughput.
+    * **Hard Queries (Outliers):** Fail to converge within the standard budget, causing recall drops or extreme latency spikes (P99).
+* **The HPDIC Solution:** This modification implements **Instance-Optimal Adaptive Scheduling**. By monitoring runtime search statistics (e.g., distance variance, convergence rate), the system dynamically adjusts the I/O budget per query. This transforms the search process from a static execution into a **predictive decision process**, aiming to minimize P99 latency while maintaining Recall stability.
+
 ## Compilation
 The original DiskANN didn't work for AMD CPUs due to the use of some Intel-specific optimizations.
 We have modified the build scripts to allow compilation on AMD CPUs by replacing Intel MKL with OpenBLAS.
@@ -16,9 +23,9 @@ make -j
 ```
 
 ## Run example programs
+If you prefer cmake, do the regular things; otherwise you can test it by directly compiling the examples:
 ```bash
 cd examples
-# If you prefer cmake, do the regular things; otherwise you can test it by directly compiling the examples:
 g++ -std=c++17 -march=native hello_hpdic.cpp \
     -I../include -L../build/src -ldiskann -laio -o hello_diskann.bin
 ./hello_diskann.bin 
