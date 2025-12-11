@@ -10,11 +10,14 @@
 #include "index.h"
 #include "partition.h"
 #include "program_options_utils.hpp"
+#include <iostream>
 
 namespace po = boost::program_options;
 
 int main(int argc, char **argv)
 {
+    std::cout << "\n ===== HPDIC MOD ===== \n" << std::endl;
+    
     std::string data_type, dist_fn, data_path, index_path_prefix, codebook_prefix, label_file, universal_label,
         label_type;
     uint32_t num_threads, R, L, disk_PQ, build_PQ, QD, Lf, filter_threshold;
