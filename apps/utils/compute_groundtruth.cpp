@@ -15,7 +15,8 @@
 #include <cstring>
 #include <queue>
 #include <omp.h>
-#include <mkl.h>
+#include <cblas.h>
+#include <lapacke.h>
 #include <boost/program_options.hpp>
 #include <unordered_map>
 #include <tsl/robin_map.h>
