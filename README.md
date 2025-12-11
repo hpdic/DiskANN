@@ -1,8 +1,21 @@
-# HPDIC MOD for AMD CPUs
+# HPDIC MOD
+
+## Compilation
 ```bash
 bash build_shared.sh
 bash patch_and_build.sh
+# After modifying diskANN app, e.g., app/build_disk_index.cpp:
+cd build
+make build_disk_index -j
+# After modifying diskANN kernel, e.g., src/pq_flash_index.cpp:
+cd build
+make -j
+```
+
+## Run example programs
+```bash
 cd examples
+# If you prefer cmake, do the regular things; otherwise you can test it by directly compiling the examples:
 g++ -std=c++17 -march=native hello_hpdic.cpp \
     -I../include -L../build/src -ldiskann -laio -o hello_diskann.bin
 ./hello_diskann.bin 

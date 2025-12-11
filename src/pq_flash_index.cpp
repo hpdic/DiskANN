@@ -8,6 +8,7 @@
 #include "pq_scratch.h"
 #include "pq_flash_index.h"
 #include "cosine_similarity.h"
+#include <iostream>
 
 #ifdef _WINDOWS
 #include "windows_aligned_file_reader.h"
@@ -761,6 +762,14 @@ int PQFlashIndex<T, LabelT>::load(MemoryMappedFiles &files, uint32_t num_threads
 template <typename T, typename LabelT> int PQFlashIndex<T, LabelT>::load(uint32_t num_threads, const char *index_prefix)
 {
 #endif
+
+    std::cout << "\n\n"
+              << "*****************************************************\n"
+              << "* ==HPDIC MOD== Hello from modified libdiskann.so!  *\n"
+              << "* I am inside src/pq_flash_index.cpp :: load()      *\n"
+              << "*****************************************************\n"
+              << "\n";    
+
     std::string pq_table_bin = std::string(index_prefix) + "_pq_pivots.bin";
     std::string pq_compressed_vectors = std::string(index_prefix) + "_pq_compressed.bin";
     std::string _disk_index_file = std::string(index_prefix) + "_disk.index";
