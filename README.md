@@ -1,11 +1,12 @@
 # HPDIC MOD
 
-Standard DiskANN relies on **static search parameters** (e.g., fixed `beam_width` and `L_search`) for all queries. However, real-world high-dimensional data is non-uniformly distributed, leading to significant variance in "Query Hardness."
+## Motivation: Eliminating the RAG Bottleneck in LLM Serving
+In modern Retrieval-Augmented Generation (RAG) pipelines, vector search is a critical blocking operation that directly impacts the **Time-to-First-Token (TTFT)**. Standard DiskANN uses static search parameters, creating a significant "Long-Tail Latency" problem that degrades the user experience in LLM serving.
 
-* **The Problem:** Treating all queries equally creates a "Long-Tail Latency" issue.
-    * **Easy Queries (Hubs):** Consume excessive I/O bandwidth due to over-provisioning, wasting throughput.
-    * **Hard Queries (Outliers):** Fail to converge within the standard budget, causing recall drops or extreme latency spikes (P99).
-* **The HPDIC Solution:** This modification implements **Instance-Optimal Adaptive Scheduling**. By monitoring runtime search statistics (e.g., distance variance, convergence rate), the system dynamically adjusts the I/O budget per query. This transforms the search process from a static execution into a **predictive decision process**, aiming to minimize P99 latency while maintaining Recall stability.
+* **The Problem:** Non-uniform query hardness leads to unpredictable latency spikes.
+    * **Latency Spikes:** Hard queries (outliers) cause high P99 latency, causing the LLM to "hang" while waiting for context.
+    * **Resource Contention:** Easy queries consume unnecessary I/O bandwidth, starving concurrent requests and reducing overall serving throughput.
+* **The HPDIC Solution:** This modification implements **Instance-Optimal Adaptive Scheduling**. By dynamically adjusting I/O budgets based on runtime search variance, we stabilize the tail latency. This ensures that the vector database keeps up with the GPU's inference speed, providing a smooth, low-jitter experience for downstream LLM applications.
 
 ## Compilation
 The original DiskANN didn't work for AMD CPUs due to the use of some Intel-specific optimizations.
