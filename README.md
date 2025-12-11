@@ -5,7 +5,7 @@ bash patch_and_build.sh
 cd examples
 g++ -std=c++17 -march=native hello_hpdic.cpp \
     -I../include -L../build/src -ldiskann -laio -o hello_diskann.bin
-./hello_diskann 
+./hello_diskann.bin 
 # compiler+linker smoke test OK
 g++ -std=c++17 -march=native hello_diskann_index.cpp \
     -I../include \
