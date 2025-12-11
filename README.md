@@ -23,6 +23,37 @@ g++ -std=c++17 -march=native hello_diskann_index.cpp \
 # Index built with degree: max:32  avg:32  min:32  count(deg<2):0
 # Searching...
 # Top-1 ID: 64 Dist: 8.40254
+g++ -std=c++17 -march=native index_serialization.cpp \
+    -I../include \
+    -L../build/src \
+    -Wl,-rpath=../build/src \
+    -ldiskann -laio -lgomp -lpthread \
+    -o index_serialization.bin
+./index_serialization.bin
+# [Info] Created directory: ./hpdic_data
+# [Step 1] Generating raw data in ./hpdic_data/data_serial.bin...
+
+# [Step 2] Building Index...
+# L2: Using AVX2 distance computation DistanceL2Float
+# Using only first 2000 from file.. 
+# Starting index build with 2000 points... 
+# 0% of index build completed.Starting final cleanup..done. Link time: 2.95362s
+# Index built with degree: max:32  avg:32  min:32  count(deg<2):0
+# [Step 3] Saving index to ./hpdic_data/saved_index...
+# Not saving tags as they are not enabled.
+# Time taken for save: 0.00134s.
+# Index saved. Destroying memory object.
+
+# --- (Simulating Restart) ---
+
+# [Step 4] Loading index from ./hpdic_data/saved_index...
+# L2: Using AVX2 distance computation DistanceL2Float
+# From graph header, expected_file_size: 264024, _max_observed_degree: 32, _start: 1230, file_frozen_pts: 0
+# Loading vamana graph ./hpdic_data/saved_index...done. Index has 2000 nodes and 64000 out-edges, _start is set to 1230
+# Num frozen points:0 _nd: 2000 _start: 1230 size(_location_to_tag): 0 size(_tag_to_location):0 Max points: 2000
+# Index loaded successfully!
+# [Step 5] Performing search...
+# Top-1 ID: 1230 Dist: 8.12346
 ```
 
 # DiskANN

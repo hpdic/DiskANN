@@ -29,7 +29,7 @@ void generate_data(const std::string& filename, size_t n, size_t d) {
 int main() {
     const size_t DIM = 128;
     const size_t NUM_POINTS = 1000;
-    const std::string DATA_FILE = "data.bin";
+    const std::string DATA_FILE = "./hpdic_data/data.bin";
 
     // 1. 生成数据
     generate_data<float>(DATA_FILE, NUM_POINTS, DIM);
