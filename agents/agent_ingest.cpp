@@ -1,4 +1,20 @@
-// agent_ingest.cpp
+/*
+ * ======================================================================================
+ * File: agents/agent_ingest.cpp
+ * Project: AdaDisk - Distributed Agentic System for Adaptive RAG
+ *
+ * Description:
+ * This agent is responsible for the data ingestion phase of the AdaDisk system.
+ * It generates raw vector data and invokes the DiskANN CLI tool to build the
+ * initial SSD-based index. It acts as the "Producer" in the producer-consumer model.
+ *
+ * Author: Dongfang Zhao <dzhao@uw.edu>
+ * Date:   December 12, 2025
+ *
+ * Copyright (c) 2025 Dongfang Zhao. All rights reserved.
+ * ======================================================================================
+ */
+
 #include <iostream>
 #include <vector>
 #include <random>
@@ -8,7 +24,7 @@
 
 namespace fs = std::filesystem;
 
-// 1. 造数据工具
+// 1. Data Generation Utility
 template<typename T>
 void generate_data(const std::string& filename, size_t n, size_t d) {
     std::ofstream out(filename, std::ios::binary);
@@ -23,15 +39,15 @@ void generate_data(const std::string& filename, size_t n, size_t d) {
 }
 
 int main() {
-    // === 路径配置 (Ingest 侧) ===
+    // === Path Configuration (Ingest Side) ===
     const std::string DIR = "./hpdic_data";
     if (!fs::exists(DIR)) fs::create_directory(DIR);
 
-    // [关键修改] 使用 ingest_ 前缀，明确这是入库数据
+    // [Key Change] Use 'ingest_' prefix to explicitly mark this as ingestion data
     const std::string DATA_FILE = DIR + "/ingest_raw.bin";
     const std::string INDEX_PREFIX = DIR + "/ingest_index"; 
     
-    // 指向 DiskANN CLI 工具
+    // Point to the DiskANN CLI tool
     const std::string BUILDER_BIN = "/home/cc/DiskANN/build/apps/build_disk_index";
 
     const size_t DIM = 128;
@@ -39,17 +55,17 @@ int main() {
     const size_t NUM_THREADS = 4;
 
     // ---------------------------------------------------------
-    // Step 1: 生成原始数据 (Ingest Raw Data)
+    // Step 1: Generate Raw Data (Ingest Raw Data)
     // ---------------------------------------------------------
     std::cout << "[Agent Ingest] Generating raw data: " << DATA_FILE << "..." << std::endl;
     generate_data<float>(DATA_FILE, NUM_POINTS, DIM);
 
     // ---------------------------------------------------------
-    // Step 2: 构建索引 (Build Index)
+    // Step 2: Build Index
     // ---------------------------------------------------------
     std::cout << "[Agent Ingest] Building DiskANN Index..." << std::endl;
     
-    // 调用 build_disk_index，输入 ingest_raw.bin，输出 ingest_index_xxx
+    // Call build_disk_index, input: ingest_raw.bin, output: ingest_index_xxx
     std::string cmd = BUILDER_BIN + " "
                       "--data_type float --dist_fn l2 "
                       "--data_path " + DATA_FILE + " "

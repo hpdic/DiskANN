@@ -1,3 +1,21 @@
+#!/usr/bin/env python3
+# ==============================================================================
+# File: agents/agent_AdaDisk.py
+# Project: AdaDisk - Distributed Agentic System for Adaptive RAG
+#
+# Description:
+#   This script serves as the main orchestrator for the AdaDisk system.
+#   It coordinates parallel Ingest and Query agents to decouple high-throughput
+#   data ingestion from low-latency serving. The system utilizes LLM-driven
+#   control planes to make adaptive scheduling decisions and performs
+#   system-wide auditing via an Aggregator Agent.
+#
+# Author: Dongfang Zhao <dzhao@us.edu>
+# Date:   December 12, 2025
+#
+# Copyright (c) 2025 Dongfang Zhao. All rights reserved.
+# ==============================================================================
+
 import time
 import os
 import re
@@ -6,7 +24,8 @@ from openai import OpenAI
 from multiprocessing import Process, Queue
 
 # --- Configuration ---
-MODEL = "llama3.2:1b"
+# MODEL = "llama3.2:1b" ## RAM < 2GB if your RAM is limited
+MODEL = "llama4:maverick" ## RAM requirement > 240 GB
 OLLAMA_API_URL = "http://localhost:11434/v1" 
 
 # Paths
@@ -21,7 +40,9 @@ def run_cpp_binary_tool(binary_path: str, agent_name: str) -> str:
     if not os.path.exists(binary_path):
         return f"Error: Binary not found at {binary_path}"
     try:
-        # stdout=None 允许 C++ 的输出直接打印到屏幕上
+        # Use subprocess to run the C++ binary.
+        # check=True raises an exception if the exit code is non-zero.
+        # text=True allows stdout to pass through to the console as string.
         subprocess.run([binary_path], check=True, text=True)
         return "Binary Execution Success"
     except subprocess.CalledProcessError as e:
@@ -34,8 +55,8 @@ def ingest_agent_process(name, binary_path, output_queue):
     print(f" [Agent {name}] Started (PID: {os.getpid()})")
     client = OpenAI(base_url=OLLAMA_API_URL, api_key="ollama")
     
-## TODO: The following should be changed to a loop to handle continuous data ingestion.
-## The ingestion requests should not compete with the query agent.
+    ## TODO: The following should be changed to a loop to handle continuous data ingestion.
+    ## The ingestion requests should not compete with the query agent.
 
     prompt = f"""Task: Check if binary path is valid.
 Binary Path: "{binary_path}"
@@ -54,7 +75,8 @@ Answer:"""
         decision = re.sub(r'[^A-Z]', '', response.choices[0].message.content.strip().upper())
         print(f"    [Agent {name}] LLM Decision: {decision}")
         
-        if "" != decision:
+        # Only execute if the LLM explicitly approves
+        if "YES" in decision:
             status = run_cpp_binary_tool(binary_path, name)
             output_queue.put(f"[ACCEPTED] {name}: {status}")
         else:
@@ -68,8 +90,8 @@ def query_agent_process(name, binary_path, output_queue):
     print(f" [Agent {name}] Started (PID: {os.getpid()})")
     client = OpenAI(base_url=OLLAMA_API_URL, api_key="ollama")
     
-## TODO: The following should be changed to a loop to handle continuous data queries.
-## The query requests should be handled with the highest priority and lowest possible latency.
+    ## TODO: The following should be changed to a loop to handle continuous data queries.
+    ## The query requests should be handled with the highest priority and lowest possible latency.
 
     prompt = f"""Task: Check if binary path is valid.
 Binary Path: "{binary_path}"
@@ -88,7 +110,8 @@ Answer:"""
         decision = re.sub(r'[^A-Z]', '', response.choices[0].message.content.strip().upper())
         print(f"    [Agent {name}] LLM Decision: {decision}")
         
-        if "" != decision:
+        # Only execute if the LLM explicitly approves
+        if "YES" in decision:
             status = run_cpp_binary_tool(binary_path, name)
             output_queue.put(f"[ACCEPTED] {name}: {status}")
         else:
@@ -99,12 +122,14 @@ Answer:"""
 
 # 4. Aggregator Agent (Audit Mode)
 def aggregator_agent(ingest_status, query_status):
-    print(f"\n [Aggregator Agent] performing audit...")
+    # Added model info to the output here
+    print(f"\n [Aggregator Agent] Performing audit (Model: {MODEL})...")
     print(f"   Ingest Agent: {ingest_status}")
     print(f"   Query Agent:  {query_status}")    
+    
     client = OpenAI(base_url=OLLAMA_API_URL, api_key="ollama")
     
-    # [关键修改] 要求 LLM 明确陈述“做了什么” (Action Taken)
+    # [Key Change] Require LLM to explicitly state "Action Taken"
     prompt = f"""You are a Pipeline Auditor.
     
 Agent Reports:
@@ -127,6 +152,7 @@ Output:"""
 if __name__ == "__main__":
     if not os.path.exists(INGEST_BIN) or not os.path.exists(QUERY_BIN):
         print("Error: Binaries not found.")
+        print(f"Please check: {INGEST_BIN} and {QUERY_BIN}")
         exit(1)
 
     print(f" Task: Parallel AdaDisk Workflow")
@@ -147,6 +173,6 @@ if __name__ == "__main__":
     
     print("\n--- Parallel Execution Complete ---")
     
-    # 输出详细审计报告
+    # Output detailed audit report
     final_audit = aggregator_agent(res_ingest, res_query)
     print(f"\n{final_audit}")

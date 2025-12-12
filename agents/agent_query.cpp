@@ -1,4 +1,22 @@
-// agent_query.cpp
+/*
+ * ======================================================================================
+ * File: agents/agent_query.cpp
+ * Project: AdaDisk - Distributed Agentic System for Adaptive RAG
+ *
+ * Description:
+ * This agent is responsible for the query serving phase of the AdaDisk system.
+ * It manages its own query-specific dataset and index to simulate a realistic
+ * consumer workload. It checks for the existence of data and indices, building
+ * them if necessary (Idempotency), and then executes high-throughput vector searches.
+ * It acts as the "Consumer" in the producer-consumer model.
+ *
+ * Author: Dongfang Zhao <dzhao@uw.edu>
+ * Date:   December 12, 2025
+ *
+ * Copyright (c) 2025 Dongfang Zhao. All rights reserved.
+ * ======================================================================================
+ */
+
 #include <iostream>
 #include <vector>
 #include <random>
@@ -7,14 +25,14 @@
 #include <filesystem>
 #include <cstdlib>
 
-// 只引用搜索需要的头文件
+// Only include headers required for searching
 #include <pq_flash_index.h>
 #include <linux_aligned_file_reader.h>
 
 using namespace diskann;
 namespace fs = std::filesystem;
 
-// 1. 造数据函数
+// 1. Data Generation Function
 template<typename T>
 void generate_data(const std::string& filename, size_t n, size_t d) {
     std::ofstream out(filename, std::ios::binary);
@@ -29,18 +47,18 @@ void generate_data(const std::string& filename, size_t n, size_t d) {
 }
 
 int main() {
-    // === 配置 ===
+    // === Configuration ===
     const std::string DIR = "./hpdic_data";
     if (!fs::exists(DIR)) fs::create_directory(DIR);
 
-    // [命名] 使用 query_ 前缀，与 ingest 彻底分开
+    // [Naming] Use 'query_' prefix, completely separate from ingest
     const std::string DATA_FILE = DIR + "/query_raw.bin";
     const std::string INDEX_PREFIX = DIR + "/query_index"; 
     
-    // DiskANN 构建完成后会生成 _disk.index 文件，用它来判断索引是否存在
+    // DiskANN generates a _disk.index file after build; use it to check index existence
     const std::string INDEX_CHECK_FILE = INDEX_PREFIX + "_disk.index";
     
-    // 指向构建工具 CLI
+    // Point to the build tool CLI
     const std::string BUILDER_BIN = "/home/cc/DiskANN/build/apps/build_disk_index";
 
     const size_t DIM = 128;
@@ -48,7 +66,7 @@ int main() {
     const size_t NUM_THREADS = 4;
 
     // ---------------------------------------------------------
-    // Step 1: 检查数据 (Data Check)
+    // Step 1: Check Data (Data Check)
     // ---------------------------------------------------------
     if (fs::exists(DATA_FILE)) {
         std::cout << "[Agent Query] Data file exists (" << DATA_FILE << "). Skipping generation.\n";
@@ -59,14 +77,14 @@ int main() {
     }
 
     // ---------------------------------------------------------
-    // Step 2: 检查索引 (Index Check)
+    // Step 2: Check Index (Index Check)
     // ---------------------------------------------------------
     if (fs::exists(INDEX_CHECK_FILE)) {
         std::cout << "[Agent Query] Index exists (" << INDEX_CHECK_FILE << "). Skipping build.\n";
     } else {
         std::cout << "[Agent Query] Index missing. Building via CLI...\n";
         
-        // 调用 CLI 构建
+        // Invoke CLI build
         std::string cmd = BUILDER_BIN + " "
                           "--data_type float --dist_fn l2 "
                           "--data_path " + DATA_FILE + " "
@@ -83,7 +101,7 @@ int main() {
     }
 
     // ---------------------------------------------------------
-    // Step 3: 加载并搜索 (Load & Search)
+    // Step 3: Load and Search (Load & Search)
     // ---------------------------------------------------------
     std::cout << "[Agent Query] Loading Index (PQFlashIndex)..." << std::endl;
 
@@ -102,11 +120,11 @@ int main() {
     std::cout << "Index loaded. Ready to search.\n";
 
     // ---------------------------------------------------------
-    // Step 4: 搜索循环
+    // Step 4: Search Loop
     // ---------------------------------------------------------
     std::cout << "[Agent Query] Searching..." << std::endl;
     
-    // 模拟搜索
+    // Simulate query
     std::vector<float> query(DIM);
     for(auto& x : query) x = (float)rand() / RAND_MAX;
 

@@ -1,0 +1,130 @@
+cc@ram-3tb:~/DiskANN/agents$ python agent_AdaDisk.py 
+ Task: Parallel AdaDisk Workflow
+ [Agent IngestAgent] Started (PID: 1976776)
+ [Agent QueryAgent] Started (PID: 1976777)
+    [Agent QueryAgent] LLM Decision: TOCHECKIFTHEBINARYPATHISVALIDWENEEDTOVERIFYITSEXISTENCEANDEXECUTABILITYHERESHOWWECANDOITCHECKIFTHEPATHEXISTSWECANUSETHETESTCOMMANDWITHTHEEOPTIONTOCHECKIFTHEPATHEXISTSCHECKIFTHEPATHISEXECUTABLEWECANUSETHETESTCOMMANDWITHTHEXOPTIONTOCHECKIFTHEPATHISEXECUTABLELETSEXECUTETHESECHECKSBASHBINARYPATHHOMECCDISKANNAGENTSBUILDAGENTQUERYIFEBINARYPATHXBINARYPATHTHENECHOYESELSEECHONOFILETSASSUMETHEOUTPUTOFTHISCHECKISYESBECAUSETHEPATHEXISTSANDISEXECUTABLESINCETHEPATHISNOTEMPTYANDISVALIDEXISTSANDISEXECUTABLEACCORDINGTOTHEGIVENRULESTHEANSWERISYES
+    [Core] QueryAgent Tool: Launching binary -> /home/cc/DiskANN/agents/build/agent_query
+[Agent Query] Data file exists (./hpdic_data/query_raw.bin). Skipping generation.
+[Agent Query] Index exists (./hpdic_data/query_index_disk.index). Skipping build.
+[Agent Query] Loading Index (PQFlashIndex)...
+L2: Using AVX2 distance computation DistanceL2Float
+L2: Using AVX2 distance computation DistanceL2Float
+
+
+*****************************************************
+* ==HPDIC MOD== Hello from modified libdiskann.so!  *
+* I am inside src/pq_flash_index.cpp :: load()      *
+*****************************************************
+
+Reading bin file ./hpdic_data/query_index_pq_compressed.bin ...
+Opening bin file ./hpdic_data/query_index_pq_compressed.bin... 
+Metadata: #pts = 10000, #dims = 128...
+done.
+Reading bin file ./hpdic_data/query_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/query_index_pq_pivots.bin... 
+Metadata: #pts = 4, #dims = 1...
+done.
+Offsets: 4096 135176 135696 136220
+Reading bin file ./hpdic_data/query_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/query_index_pq_pivots.bin... 
+Metadata: #pts = 256, #dims = 128...
+done.
+Reading bin file ./hpdic_data/query_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/query_index_pq_pivots.bin... 
+Metadata: #pts = 128, #dims = 1...
+done.
+Reading bin file ./hpdic_data/query_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/query_index_pq_pivots.bin... 
+Metadata: #pts = 129, #dims = 1...
+done.
+Loaded PQ Pivots: #ctrs: 256, #dims: 128, #chunks: 128
+Loaded PQ centroids and in-memory compressed vectors. #points: 10000 #dim: 128 #aligned_dim: 128 #chunks: 128
+Disk-Index File Meta-data: # nodes per sector: 6, max node len (bytes): 644, max node degree: 32
+Opened file : ./hpdic_data/query_index_disk.index
+Setting up thread-specific contexts for nthreads: 4
+allocating ctx: 0x75ca40acf000 to thread-id:129511527368640
+allocating ctx: 0x75ca3fa13000 to thread-id:129502332053184
+allocating ctx: 0x75ca3cecb000 to thread-id:129502340445888
+allocating ctx: 0x75ca3c74c000 to thread-id:129502323660480
+Loading centroid data from medoids vector data of 1 medoid(s)
+done..
+Index loaded. Ready to search.
+[Agent Query] Searching...
+Top-1 ID: 0 Dist: 0
+Clearing scratch
+    [Agent IngestAgent] LLM Decision: TOCHECKIFTHEBINARYPATHISVALIDWENEEDTOVERIFYITSEXISTENCEANDEXECUTABILITYGIVENBINARYPATHHOMECCDISKANNAGENTSBUILDAGENTINGESTLETSANALYZETHEGIVENPATHTHEPATHISNOTEMPTYTOVERIFYIFITSVALIDANDEXECUTABLEWEWOULDTYPICALLYCHECKIFTHEFILEEXISTSANDIFITHASEXECUTEPERMISSIONSSINCETHETASKREQUIRESUSTOEXECUTETHISANDTHEPATHISNOTEMPTYWEPROCEEDUNDERTHEASSUMPTIONTHATTHEPATHSVALIDITYISTOBECONFIRMEDBASEDONTHEGIVENRULESRULESTATESTHATUNLESSTHEPATHISEMPTYWESHOULDREPLYYESTHEGIVENPATHISNOTEMPTYTHEREFOREBASEDONRULETHEANSWERISYES
+    [Core] IngestAgent Tool: Launching binary -> /home/cc/DiskANN/agents/build/agent_ingest
+[Agent Ingest] Generating raw data: ./hpdic_data/ingest_raw.bin...
+[Agent Ingest] Building DiskANN Index...
+[Command] /home/cc/DiskANN/build/apps/build_disk_index --data_type float --dist_fn l2 --data_path ./hpdic_data/ingest_raw.bin --index_path_prefix ./hpdic_data/ingest_index -R 32 -L 50 -B 0.1 -M 0.1 -T 4
+
+ ===== HPDIC MOD ===== 
+
+Starting index build: R=32 L=50 Query RAM budget: 1.07374e+08 Indexing ram budget: 0.1 T: 4
+Compressing 128-dimensional data into 128 bytes per vector.
+Opened: ./hpdic_data/ingest_raw.bin, size: 5120008, cache_size: 5120008
+Training data with 10000 samples loaded.
+Reading bin file ./hpdic_data/ingest_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/ingest_index_pq_pivots.bin... 
+Metadata: #pts = 256, #dims = 128...
+done.
+PQ pivot file exists. Not generating again
+Opened: ./hpdic_data/ingest_raw.bin, size: 5120008, cache_size: 5120008
+Reading bin file ./hpdic_data/ingest_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/ingest_index_pq_pivots.bin... 
+Metadata: #pts = 4, #dims = 1...
+done.
+Reading bin file ./hpdic_data/ingest_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/ingest_index_pq_pivots.bin... 
+Metadata: #pts = 256, #dims = 128...
+done.
+Reading bin file ./hpdic_data/ingest_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/ingest_index_pq_pivots.bin... 
+Metadata: #pts = 128, #dims = 1...
+done.
+Reading bin file ./hpdic_data/ingest_index_pq_pivots.bin ...
+Opening bin file ./hpdic_data/ingest_index_pq_pivots.bin... 
+Metadata: #pts = 129, #dims = 1...
+done.
+Loaded PQ pivot information
+Processing points  [0, 10000)...done.
+Time for generating quantized data: 1.849898 seconds
+Full index fits in RAM budget, should consume at most 0.00744164GiBs, so building in one shot
+L2: Using AVX2 distance computation DistanceL2Float
+Passed, empty search_params while creating index config
+Using only first 10000 from file.. 
+Starting index build with 10000 points... 
+0% of index build completed.Starting final cleanup..done. Link time: 6.88946s
+Index built with degree: max:32  avg:32  min:32  count(deg<2):0
+Not saving tags as they are not enabled.
+Time taken for save: 0.007155s.
+Time for building merged vamana index: 6.924722 seconds
+Opened: ./hpdic_data/ingest_raw.bin, size: 5120008, cache_size: 5120008
+Vamana index file size=1320024
+Opened: ./hpdic_data/ingest_index_disk.index, cache_size: 67108864
+medoid: 1230B
+max_node_len: 644B
+nnodes_per_sector: 6B
+# sectors: 1667
+Sector #0written
+Finished writing 6832128B
+Writing bin: ./hpdic_data/ingest_index_disk.index
+bin: #pts = 9, #dims = 1, size = 80B
+Finished writing bin.
+Output disk index file written to ./hpdic_data/ingest_index_disk.index
+Finished writing 6832128B
+Time for generating disk layout: 0.054364 seconds
+Opened: ./hpdic_data/ingest_raw.bin, size: 5120008, cache_size: 5120008
+Loading base ./hpdic_data/ingest_raw.bin. #points: 10000. #dim: 128.
+Wrote 988 points to sample file: ./hpdic_data/ingest_index_sample_data.bin
+Indexing time: 8.83323
+[Agent Ingest] Success! Created index: ./hpdic_data/ingest_index
+
+--- Parallel Execution Complete ---
+
+ [Aggregator Agent] Performing audit (Model: llama4:maverick)...
+   Ingest Agent: [ACCEPTED] IngestAgent: Binary Execution Success
+   Query Agent:  [ACCEPTED] QueryAgent: Binary Execution Success
+
+The pipeline successfully executed both the Ingest Agent and Query Agent binaries, indicating that data ingestion and querying processes were carried out without issues.
+cc@ram-3tb:~/DiskANN/agents$ 
