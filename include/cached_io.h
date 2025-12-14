@@ -43,7 +43,7 @@ class cached_ifstream
             this->cache_size = cacheSize;
             cache_buf = new char[cacheSize];
             reader.read(cache_buf, cacheSize);
-            diskann::cout << "Opened: " << filename.c_str() << ", size: " << fsize << ", cache_size: " << cacheSize
+            diskann::cout << "Opened: " << filename << ", size: " << fsize << ", cache_size: " << cacheSize
                           << std::endl;
         }
         catch (std::system_error &e)
