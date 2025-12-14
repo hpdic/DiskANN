@@ -126,7 +126,7 @@ class cached_ofstream
             assert(writer.is_open());
             assert(cache_size > 0);
             cache_buf = new char[cache_size];
-            diskann::cout << "Opened: " << filename.c_str() << ", cache_size: " << cache_size << std::endl;
+            diskann::cout << "Opened: " << filename << ", cache_size: " << cache_size << std::endl;
         }
         catch (std::system_error &e)
         {
@@ -162,8 +162,10 @@ class cached_ofstream
     {
         return fsize;
     }
+
     // writes n_bytes from write_buf to the underlying ofstream/cache
-    void write(char *write_buf, uint64_t n_bytes)
+    // HPDIC: "char *write_buf" is danguerous, as it can overwrite existing data in the file
+    void write(const char *write_buf, uint64_t n_bytes)
     {
         assert(cache_buf != nullptr);
         if (n_bytes <= (cache_size - cur_off))
