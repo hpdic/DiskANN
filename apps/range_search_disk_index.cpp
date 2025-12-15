@@ -190,7 +190,7 @@ int search_disk_index(diskann::Metric &metric, const std::string &index_path_pre
         if (beamwidth <= 0)
         {
             optimized_beamwidth =
-                optimize_beamwidth(_pFlashIndex, warmup, warmup_num, warmup_aligned_dim, L, optimized_beamwidth);
+                optimize_beamwidth(_pFlashIndex.get(), warmup, warmup_num, warmup_aligned_dim, L, optimized_beamwidth);
         }
         else
             optimized_beamwidth = beamwidth;
