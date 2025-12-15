@@ -58,6 +58,7 @@ template <typename data_t> class InMemDataStore : public AbstractDataStore<data_
 
     virtual location_t calculate_medoid() const override;
 
+    // TODO HPDIC: This is dangerous, we should not expose the internal data pointers. If we need to, maybe we should do something like this: Distance<data_t>& get_dist_fn() const;
     virtual Distance<data_t> *get_dist_fn() const override;
 
     virtual size_t get_alignment_factor() const override;
