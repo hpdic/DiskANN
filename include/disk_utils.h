@@ -45,7 +45,7 @@ template <typename T, typename LabelT> class PQFlashIndex;
 
 DISKANN_DLLEXPORT double get_memory_budget(const std::string &mem_budget_str);
 DISKANN_DLLEXPORT double get_memory_budget(double search_ram_budget_in_gb);
-DISKANN_DLLEXPORT void add_new_file_to_single_index(std::string index_file, std::string new_file);
+DISKANN_DLLEXPORT void add_new_file_to_single_index(const std::string &index_file, const std::string &new_file);
 
 DISKANN_DLLEXPORT size_t calculate_num_pq_chunks(double final_index_ram_limit, size_t points_num, uint32_t dim);
 
