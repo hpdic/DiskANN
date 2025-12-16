@@ -6,5 +6,24 @@
         "vector": "cpp",
         "string": "cpp",
         "memory": "cpp"
-    }
+    },
+    // 1. 告诉 C++ 插件：别看这些文件夹
+    "C_Cpp.files.exclude": {
+        "**/build": true,
+        "**/data": true,
+        "**/.git": true,
+        "**/hpdic_data": true
+    },
+    // 2. 告诉 VS Code 文件监视器：别盯着这些文件夹（这一步能极大降低 CPU）
+    "files.watcherExclude": {
+        "**/build/**": true,
+        "**/data/**": true,
+        "**/.git/objects/**": true,
+        "**/hpdic_data": true
+    },
+    // 3. 甚至在左侧目录树里都把它们藏起来（眼不见心不烦，可选）
+    "files.exclude": {
+        "**/data": true,
+        "**/hpdic_data": true
+    }    
 }
