@@ -172,6 +172,9 @@ template <typename T> class SSDThreadData
 template <typename T> class ScratchStoreManager
 {
   public:
+    ScratchStoreManager(const ScratchStoreManager<T> &) = delete;
+    ScratchStoreManager &operator=(const ScratchStoreManager<T> &) = delete;
+
     ScratchStoreManager(ConcurrentQueue<T *> &query_scratch) : _scratch_pool(query_scratch)
     {
         _scratch = query_scratch.pop();
@@ -210,7 +213,6 @@ template <typename T> class ScratchStoreManager
   private:
     T *_scratch;
     ConcurrentQueue<T *> &_scratch_pool;
-    ScratchStoreManager(const ScratchStoreManager<T> &);
-    ScratchStoreManager &operator=(const ScratchStoreManager<T> &);
+    
 };
 } // namespace diskann
