@@ -32,6 +32,11 @@ cd build
 make -j
 ```
 
+## Quick start
+```bash
+bash scripts/run_build_disk_index.sh
+```
+
 ## Agentic execution
 This is what's happening in the multi-agent setup of LLM serving, where multiple agents are running concurrently to handle different tasks such as data ingestion and query processing. 
 - The HPDIC MOD introduces a new agent called `agent_AdaDisk.py` that dynamically adjusts the search parameters based on the runtime variance of the search queries and possible concurrent ingestion.
