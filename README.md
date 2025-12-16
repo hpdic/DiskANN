@@ -1,3 +1,5 @@
+# **Update on December 16 2025:** There've been so many changes in this fork and I envision there'll be a lot more major changes to support agentic scheduling. So, I decided to create a hard fork at a seperate repo: https://github.com/hpdic/AdaDisk. I'll stop updating this fork.
+
 # [HPDIC MOD] AdaDisk: A Distributed Agentic System for Adaptive Ingestion-Query Scheduling of DiskANN RAG in LLM Serving
 
 ## Motivation: Resolving the Freshness-Latency Dilemma in Production RAG and LLM Serving
