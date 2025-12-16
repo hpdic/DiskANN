@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 #pragma once
 
+#include <string>
 #include <chrono>
 
 namespace diskann
